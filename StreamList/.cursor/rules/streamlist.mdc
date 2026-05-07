@@ -1,0 +1,13 @@
+---
+description: StreamList React Native project constraints
+alwaysApply: false
+---
+# StreamList rules
+
+- Screens must not call `fetch` or `axios` directly. Use the existing hooks and `src/api/client.ts`.
+- Do not import `axios` outside `src/api/client.ts`.
+- Use `StyleSheet.create` only for styling. No Tailwind, NativeWind, styled-components, or third-party UI kits.
+- Read colors from `src/theme/colors.ts` and spacing from `src/theme/spacing.ts` only (no arbitrary hex or pixel literals in feature components except where the platform requires `0`/`1` hairlines unrelated to layout borders).
+- Do not use `any` types; keep `strict` TypeScript.
+- Do not add 1px solid borders for layout; use tonal layering and spacing per the design system.
+- Never commit secrets; use `.env` locally and keep placeholders in `.env.example`.

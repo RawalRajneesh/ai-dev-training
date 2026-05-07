@@ -1,0 +1,35 @@
+---
+description: Networking and data fetching — hooks, API layer, client only
+globs: StreamList/src/**/*
+alwaysApply: false
+---
+
+# API and data fetching
+
+These rules are **blocking**. Any violation MUST be fixed before merge.
+
+## Screen-level data
+
+- Screen components MUST obtain async data only through **custom hooks** (for example hooks under `src/hooks/` or colocated hook modules following the same pattern).
+- Screen components MUST NOT implement data loading with `useEffect` combined with `fetch`, `axios`, or any other HTTP client call.
+- Screen components MUST NOT call API modules directly for side-effect loading; they MUST call hooks that encapsulate that behavior.
+
+## HTTP client usage
+
+- All outbound HTTP requests MUST be implemented using the shared client in `src/api/client.ts`.
+- Application code MUST NOT import or use `axios` except inside `src/api/client.ts` (if the client is axios-based).
+- Application code MUST NOT use the global `fetch` API (or any wrapper that bypasses `src/api/client.ts`) in components, screens, or hooks.
+- API endpoint functions (for example under `src/api/`) MUST use only the project client from `src/api/client.ts` to perform requests.
+
+## Required architecture
+
+Data flow MUST follow this layering, in one direction only:
+
+`screens → hooks → api → client`
+
+- **Screens**: UI and wiring only; consume hooks; MUST NOT contain transport or parsing logic beyond what the hook returns.
+- **Hooks**: Own loading/error/state and orchestration; call `src/api/*` modules; MUST NOT bypass `src/api/client.ts`.
+- **API modules** (`src/api/`): Request shapes, paths, and response mapping; MUST use `src/api/client.ts` exclusively for I/O.
+- **Client** (`src/api/client.ts`): Single place for base URL, headers, interceptors, and low-level request execution.
+
+Violations of this chain (for example a screen importing `src/api/client.ts`, or a hook calling `fetch` directly) MUST NOT ship.

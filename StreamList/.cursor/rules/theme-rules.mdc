@@ -1,0 +1,26 @@
+---
+description: Colors, spacing, and design tokens — theme modules only
+globs: StreamList/src/**/*
+alwaysApply: false
+---
+
+# Theme and design system
+
+These rules are **blocking**. Any violation MUST be fixed before merge.
+
+## Colors
+
+- All color values used for UI (text, backgrounds, borders, icons, shadows where expressed as color, and so on) MUST come from `src/theme/colors.ts` (or named exports re-exported from that module as the single source of truth).
+- Components, screens, and hooks MUST NOT use hardcoded hex (`#...`), `rgb(...)`, `rgba(...)`, `hsl(...)`, or other literal color strings in `StyleSheet`, inline styles, or style objects, except where the platform API requires a value that cannot be referenced from the theme file (if such an exception exists, it MUST be documented in code review and kept minimal).
+
+## Spacing
+
+- All margin, padding, gap, and layout spacing numeric values MUST come from `src/theme/spacing.ts` (or named tokens exported from that module as the single source of truth).
+- Components, screens, and hooks MUST NOT use hardcoded numeric literals for margin, padding, or gap in styles when those values represent design-system spacing (use spacing tokens instead).
+
+## Enforcement
+
+- New UI MUST use existing tokens from `src/theme/colors.ts` and `src/theme/spacing.ts`.
+- If a needed token is missing, you MUST add it to the appropriate theme file and consume it from there; you MUST NOT embed one-off literals in feature code to bypass the theme.
+
+Violations are blocking issues and MUST be corrected before merge.
