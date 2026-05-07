@@ -1,0 +1,22 @@
+---
+description: Navigation param lists and typing — central types module only
+globs: StreamList/src/**/*
+alwaysApply: false
+---
+
+# Navigation typing
+
+These rules are **blocking**. Any violation MUST be fixed before merge.
+
+## Single source of truth
+
+- All React Navigation param lists, navigator props types, and related route/type aliases for the app MUST be defined in `src/navigation/types.ts` (or explicitly exported from that file as the canonical definitions).
+- Screens, navigators, hooks, and shared utilities MUST NOT define inline or local duplicates of navigation param types (for example `type RootStackParamList = { ... }` outside `src/navigation/types.ts`).
+- Screens, navigators, and hooks MUST import navigation types from `src/navigation/types.ts` (or from a barrel that re-exports only those definitions) instead of re-declaring equivalent types.
+
+## Reuse
+
+- The same route names and param object shapes MUST use the **same** types from `src/navigation/types.ts` everywhere: stack/tab/screen components, `useNavigation`, `RouteProp`, `NativeStackScreenProps`, and custom hooks that touch navigation.
+- Adding a new route or changing params MUST be done by updating `src/navigation/types.ts` first; consumers MUST be updated to use the shared types only.
+
+Violations (local param list types, duplicated route typings, or screens typed without the central definitions) are blocking issues and MUST be corrected before merge.
